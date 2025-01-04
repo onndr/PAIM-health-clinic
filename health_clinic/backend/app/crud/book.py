@@ -110,9 +110,9 @@ def return_book(db: Session, book: Book):
         return book, loan
     return None, None
 
-def unreserve_book(db: Session, book: Book):
+def unreserve_book(db: Session, book: Book, user: User):
     # find loan of the book that is reserved by the user
-    loan = db.query(Loan).filter(Loan.book_id == book.id, Loan.status == LoanStatus.Reserved).first()
+    loan = db.query(Loan).filter(Loan.book_id == book.id, Loan.user_id == user.id, Loan.status == LoanStatus.Reserved).first()
     if loan:
         # update book
         setattr(book, 'status', BookStatus.Available)
