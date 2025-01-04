@@ -4,7 +4,7 @@ import BookService from '../services/BookService';
 import { useAuth } from '../context/AuthContext';
 
 const AddBookPage: React.FC = () => {
-  const [bookData, setBookData] = useState({ title: '', author: '', publication_date: '', price: 0 });
+  const [bookData, setBookData] = useState({ title: '', author: '', publication_date: '', price: 0, version: 0 });
   const { isLibrarian } = useAuth();
   const navigate = useNavigate();
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -62,7 +63,7 @@ const LoginPage: React.FC = () => {
       </button>
       </form>
       <p className="text-center mt-3">
-      Don't have an account? <a href='' onClick={() => navigate('/register')}>Register</a>
+        Don't have an account? <Link className="link" to="/register">Register</Link>
       </p>
     </div>
   );
