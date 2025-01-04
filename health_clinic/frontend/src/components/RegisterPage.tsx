@@ -11,7 +11,8 @@ const RegisterPage: React.FC = () => {
     email: '',
     first_name: '',
     last_name: '',
-    phone_number: ''
+    phone_number: '',
+    version: 0
   });
   const { register } = useAuth();
 
