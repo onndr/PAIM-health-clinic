@@ -87,7 +87,7 @@ def reserve_book(book_id: int, db: Session = Depends(get_db), current_user: mode
         raise HTTPException(status_code=403, detail="User is not a reader")
     if db_book.status != BookStatus.Available:
         raise HTTPException(status_code=400, detail="Book is not available")
-    _, db_loan = crud.reserve_book(db=db, book_id=book_id)
+    _, db_loan = crud.reserve_book(db=db, book_id=book_id, user=current_user)
     return map_db_loan_to_response_loan(db_loan)
 
 @router.post("/api/books/borrow/{book_id}", response_model=schemas.Loan)
@@ -123,7 +123,7 @@ def cancel_reservation(book_id: int, db: Session = Depends(get_db), current_user
         raise HTTPException(status_code=403, detail="User is not a reader")
     if db_book.status != BookStatus.Reserved:
         raise HTTPException(status_code=400, detail="Book is not reserved")
-    _, db_loan = crud.unreserve_book(db=db, book=db_book)
+    _, db_loan = crud.unreserve_book(db=db, book=db_book, user=current_user)
     return map_db_loan_to_response_loan(db_loan)
 
 @router.get("/api/loans", response_model=list[schemas.Loan])
