@@ -1,16 +1,19 @@
+import os
+
+from flask import Flask, send_from_directory
+from sqlalchemy import inspect
+
 from app.routers import auth, book, user
 from app.database import engine, Base, SessionLocal
 from app.models.user import User
 from app.models.book import Book, BookStatus
 from app.models.loan import Loan, LoanStatus
-from sqlalchemy import inspect
-
-import os
-from flask import Flask, send_from_directory
 
 
 app = Flask(__name__, static_folder='../../frontend/build')
 app.register_blueprint(auth.auth_bp)
+app.register_blueprint(user.user_bp)
+app.register_blueprint(book.book_bp)
 
 # Serve React App
 @app.route('/', defaults={'path': ''})
@@ -75,6 +78,5 @@ app.run(use_reloader=True, port=5000, threaded=True)
 #     allow_headers=["*"],
 # )
 
-# app.include_router(auth.router)
 # app.include_router(book.router)
 # app.include_router(user.router)

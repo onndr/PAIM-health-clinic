@@ -1,6 +1,6 @@
-# FastAPI Library Project
+# Flask Health Clinic Project
 
-This project is a FastAPI application that provides user registration and login functionalities using JWT, along with CRUD operations for a book object. It connects to a PostgreSQL database and utilizes SQLAlchemy for ORM.
+This project is a Flask application that provides user registration and login functionalities using JWT, along with CRUD operations for an appoinment object. It connects to a PostgreSQL database and utilizes SQLAlchemy for ORM.
 
 ## Setup Instructions
 
@@ -18,12 +18,12 @@ This project is a FastAPI application that provides user registration and login 
 3. **Set up the PostgreSQL database:**
    - Create a PostgreSQL database and update the connection details in `app/database.py`.
 
-4. **Start the FastAPI application:**
+4. **Start the Flask application:**
    ```
    uvicorn app.main:app --reload
    ```
 
-## Usage
+## Usage - Outdated
 
 - **User Registration:**
   - Endpoint: `POST /auth/register`

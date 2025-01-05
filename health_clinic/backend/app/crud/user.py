@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from werkzeug.exceptions import abort
+
 from app.models.loan import Loan
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
-from datetime import datetime, timedelta
+
 
 def create_user(db: Session, user: UserCreate, is_librarian: bool = False):
     db_user = User(
@@ -23,9 +26,6 @@ def create_user(db: Session, user: UserCreate, is_librarian: bool = False):
 def update_user(db: Session, user_id: int, user: UserUpdate):
     db_user = db.query(User).filter(User.id == user_id).first()
     if db_user:
-        if db_user.version != user.version:
-            raise HTTPException(status_code=409, detail="Conflict: The user data was updated by another transaction.")
-
         for key, value in user.dict().items():
             if key == 'is_librarian':
                 continue

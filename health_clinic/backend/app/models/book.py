@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, String, Date, Float, Enum
-from app.database import Base
 import enum
+
+from sqlalchemy import Column, Integer, String, Date, Float, Enum
+
+from app.database import Base
+
 
 class BookStatus(enum.Enum):
     Available = 'AVAILABLE'

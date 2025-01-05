@@ -1,4 +1,3 @@
-FastAPI
 uvicorn
 sqlalchemy
 asyncpg

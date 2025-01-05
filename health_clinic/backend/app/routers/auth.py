@@ -1,18 +1,18 @@
-from fastapi.security import OAuth2PasswordBearer
+from datetime import datetime, timedelta
+
 from flask import Blueprint, request, jsonify
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 from sqlalchemy.orm import Session
+from werkzeug.exceptions import abort
+
 from app import schemas, models, crud
 from app.database import get_db
-from app.models.user import User
-from passlib.context import CryptContext
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
 
 
 auth_bp = Blueprint('auth', __name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -34,18 +34,17 @@ def get_current_user():
     if token is None or not token.startswith("Bearer "):
         return jsonify({"detail": "Could not validate credentials"}), 401
     token = token[len("Bearer "):]
-    credentials_exception = jsonify({"detail": "Could not validate credentials"}), 401
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("username")
         if username is None:
-            return credentials_exception
+            abort(401, "Could not validate credentials")
     except JWTError:
-        return credentials_exception
+        abort(401, "Could not validate credentials")
     db = next(get_db())
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(models.user.User).filter(models.user.User.username == username).first()
     if user is None:
-        return credentials_exception
+        abort(401, "Could not validate credentials")
     return user
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
@@ -63,7 +62,10 @@ def register():
     data = request.get_json()
     db = next(get_db())
     user = schemas.UserCreate(**data)
-    created_user = crud.create_user(db=db, user=user)
+    try:
+        created_user = crud.create_user(db=db, user=user)
+    except Exception as e:
+        return jsonify({"detail": str(e)}), 400
     return map_db_user_to_response_user(created_user).dict()
 
 @auth_bp.route("/api/users/login", methods=["POST"])

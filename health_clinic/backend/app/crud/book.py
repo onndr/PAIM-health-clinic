@@ -1,10 +1,13 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
 from werkzeug.exceptions import abort
+
 from app.models.book import Book, BookStatus
 from app.models.user import User
 from app.models.loan import Loan, LoanStatus
 from app.schemas.book import BookCreate, BookUpdate
-from datetime import datetime, timedelta
+
 
 def create_book(db: Session, book: BookCreate):
     db_book = Book(
@@ -28,12 +31,8 @@ def get_books(db: Session, skip: int = 0, limit: int = 10):
 def update_book(db: Session, book_id: int, book: BookUpdate):
     db_book = db.query(Book).filter(Book.id == book_id).first()
     if db_book:
-        if db_book.version != book.version:
-            abort(409, description="Conflict: The book was updated by another transaction.")
-
         for key, value in book.dict().items():
             setattr(db_book, key, value)
-
         db.commit()
         db.refresh(db_book)
     return db_book

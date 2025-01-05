@@ -1,8 +1,11 @@
+import enum
+
 from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey
+
 from app.database import Base
 from app.models.book import BookStatus, Book
 from app.models.user import User
-import enum
+
 
 class LoanStatus(enum.Enum):
     Reserved = 'RESERVED'
