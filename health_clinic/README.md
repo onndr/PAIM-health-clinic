@@ -64,13 +64,14 @@ cd backend ; uvicorn app.main:app
     | Pesel         | String      |
     | HashedPass    | String      |
 
-5. MedicDisease
+5. MedicDiseaseService
 
     | Column Name       | Column Type |
     |-------------------|-------------|
     | Id                | Integer, PK |
     | MedicId           | Integer, FK |
     | DiseaseId         | Integer, FK |
+    | Service           | String      |
 
 6. Appointments
 
@@ -81,7 +82,9 @@ cd backend ; uvicorn app.main:app
     | PatientDiseaseId  | Integer, FK       |
     | Date              | Date              |
     | Status            | AppointmentStatus |
-    | Notes             | String            |
+    | MedicNotes        | String            |
+    | PatientRate       | Number            |
+    | PatientFeedback   | String            |
 
 7. MedicTimetable
 
@@ -90,5 +93,5 @@ cd backend ; uvicorn app.main:app
     | Id                | Integer, PK |
     | MedicId           | Integer, FK |
     | Day               | Day         |
-    | FromTime          | String      |
-    | ToTime            | String      |
+    | FromTime          | Time        |
+    | ToTime            | Time        |
