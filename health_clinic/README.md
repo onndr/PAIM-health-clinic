@@ -36,6 +36,7 @@ cd backend ; uvicorn app.main:app
     | PhoneNumber   | String      |
     | Password      | String      |
     | Pesel         | String      |
+    | HashedPass    | String      |
 
 2. Diseases
 
@@ -66,6 +67,7 @@ cd backend ; uvicorn app.main:app
     | PhoneNumber   | String      |
     | Password      | String      |
     | Pesel         | String      |
+    | HashedPass    | String      |
 
 5. Services
 
