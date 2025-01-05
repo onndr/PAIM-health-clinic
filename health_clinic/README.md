@@ -39,11 +39,10 @@ cd backend ; uvicorn app.main:app
 
 2. Diseases
 
-    | Column Name       | Column Type           |
-    |-------------------|-----------------------|
-    | Id                | String, PK            |
-    | Name              | String                |
-    | UserId            | String, FK            |
+    | Column Name       | Column Type |
+    |-------------------|-------------|
+    | Id                | String, PK  |
+    | Name              | String      |
 
 3. PatientDisease
 
@@ -70,26 +69,26 @@ cd backend ; uvicorn app.main:app
     | Column Name       | Column Type |
     |-------------------|-------------|
     | Id                | String, PK  |
-    | Name              | String      |
     | MedicId           | String, FK  |
+    | DiseaseId         | String, FK  |
 
 6. Appointments
 
-    | Column Name       | Column Type           |
-    |-------------------|-----------------------|
-    | Id                | String, PK            |
-    | MedicId           | String, FK            |
-    | PatientDiseaseId  | String, FK            |
-    | Date              | Date                  |
-    | Status            | AppointmentStatus     |
-    | Notes             | String                |
+    | Column Name       | Column Type       |
+    |-------------------|-------------------|
+    | Id                | String, PK        |
+    | MedicId           | String, FK        |
+    | PatientDiseaseId  | String, FK        |
+    | Date              | Date              |
+    | Status            | AppointmentStatus |
+    | Notes             | String            |
 
 7. MedicTimetable
 
-    | Column Name       | Column Type           |
-    |-------------------|-----------------------|
-    | Id                | String, PK            |
-    | MedicId           | String, FK            |
-    | Day               | String, FK            |
-    | FromTime          | String                |
-    | ToTime            | String                |
+    | Column Name       | Column Type |
+    |-------------------|-------------|
+    | Id                | String, PK  |
+    | MedicId           | String, FK  |
+    | Day               | Day         |
+    | FromTime          | String      |
+    | ToTime            | String      |
