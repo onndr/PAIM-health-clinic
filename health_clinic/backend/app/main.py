@@ -1,25 +1,29 @@
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from app.routers import auth, book, user
 from app.database import engine, Base, SessionLocal
 from app.models.user import User
 from app.models.book import Book, BookStatus
 from app.models.loan import Loan, LoanStatus
+from sqlalchemy import inspect
 
-app = FastAPI()
+import os
+from flask import Flask, send_from_directory
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
+app = Flask(__name__, static_folder='../../frontend/build')
+app.register_blueprint(auth.auth_bp)
+
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 Base.metadata.create_all(bind=engine)
 
+# Initialize the database with initial data
 def init_db():
     db = SessionLocal()
     try:
@@ -57,23 +61,20 @@ def init_db():
         db.commit()
     finally:
         db.close()
+# check if db is initialized already
 
-# Initialize the database with initial data
-# init_db()
+if not inspect(engine).has_table("user"):
+    init_db()
+app.run(use_reloader=True, port=5000, threaded=True)
 
-# Serve the React build directory
-app.mount("/static", StaticFiles(directory="../frontend/build/static"), name="static")
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
-templates = Jinja2Templates(directory="../frontend/build")
-
-@app.get("/")
-async def serve_spa(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-app.include_router(auth.router)
-app.include_router(book.router)
-app.include_router(user.router)
-
-# @app.get("/")
-# def read_root():
-#     return {"message": "Welcome to the FastAPI Book API"}
+# app.include_router(auth.router)
+# app.include_router(book.router)
+# app.include_router(user.router)

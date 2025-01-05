@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from werkzeug.exceptions import abort
 from app.models.book import Book, BookStatus
 from app.models.user import User
 from app.models.loan import Loan, LoanStatus
@@ -29,7 +29,7 @@ def update_book(db: Session, book_id: int, book: BookUpdate):
     db_book = db.query(Book).filter(Book.id == book_id).first()
     if db_book:
         if db_book.version != book.version:
-            raise HTTPException(status_code=409, detail="Conflict: The book was updated by another transaction.")
+            abort(409, description="Conflict: The book was updated by another transaction.")
 
         for key, value in book.dict().items():
             setattr(db_book, key, value)
