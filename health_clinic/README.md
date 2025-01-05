@@ -34,7 +34,6 @@ cd backend ; uvicorn app.main:app
     | LastName      | String      |
     | Email         | String      |
     | PhoneNumber   | String      |
-    | Password      | String      |
     | Pesel         | String      |
     | HashedPass    | String      |
 
@@ -45,10 +44,8 @@ cd backend ; uvicorn app.main:app
     | Id                | String, PK            |
     | Name              | String                |
     | UserId            | String, FK            |
-    | Date              | Date                  |
-    | Status            | AppointmentStatus     |
 
-3. PatientDiseases
+3. PatientDisease
 
     | Column Name       | Column Type |
     |-------------------|-------------|
@@ -65,26 +62,18 @@ cd backend ; uvicorn app.main:app
     | LastName      | String      |
     | Email         | String      |
     | PhoneNumber   | String      |
-    | Password      | String      |
     | Pesel         | String      |
     | HashedPass    | String      |
 
-5. Services
+5. MedicDisease
 
     | Column Name       | Column Type |
     |-------------------|-------------|
     | Id                | String, PK  |
     | Name              | String      |
-
-6. MedicsServices
-
-    | Column Name       | Column Type |
-    |-------------------|-------------|
-    | Id                | String, PK  |
     | MedicId           | String, FK  |
-    | ServiceId         | String, FK  |
 
-7. Appointments
+6. Appointments
 
     | Column Name       | Column Type           |
     |-------------------|-----------------------|
@@ -95,7 +84,7 @@ cd backend ; uvicorn app.main:app
     | Status            | AppointmentStatus     |
     | Notes             | String                |
 
-8. MedicTimetable
+7. MedicTimetable
 
     | Column Name       | Column Type           |
     |-------------------|-----------------------|
