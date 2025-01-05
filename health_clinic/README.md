@@ -29,7 +29,7 @@ cd backend ; uvicorn app.main:app
 
     | Column Name   | Column Type |
     |---------------|-------------|
-    | Id            | String, PK  |
+    | Id            | Integer, PK |
     | FirstName     | String      |
     | LastName      | String      |
     | Email         | String      |
@@ -41,22 +41,22 @@ cd backend ; uvicorn app.main:app
 
     | Column Name       | Column Type |
     |-------------------|-------------|
-    | Id                | String, PK  |
+    | Id                | Integer, PK |
     | Name              | String      |
 
 3. PatientDisease
 
     | Column Name       | Column Type |
     |-------------------|-------------|
-    | Id                | String, PK  |
-    | PatientId         | String, FK  |
-    | DiseaseId         | String, FK  |
+    | Id                | Integer, PK |
+    | PatientId         | Integer, FK |
+    | DiseaseId         | Integer, FK |
 
 4. Medics
 
     | Column Name   | Column Type |
     |---------------|-------------|
-    | Id            | String, PK  |
+    | Id            | Integer, PK |
     | FirstName     | String      |
     | LastName      | String      |
     | Email         | String      |
@@ -68,17 +68,17 @@ cd backend ; uvicorn app.main:app
 
     | Column Name       | Column Type |
     |-------------------|-------------|
-    | Id                | String, PK  |
-    | MedicId           | String, FK  |
-    | DiseaseId         | String, FK  |
+    | Id                | Integer, PK |
+    | MedicId           | Integer, FK |
+    | DiseaseId         | Integer, FK |
 
 6. Appointments
 
     | Column Name       | Column Type       |
     |-------------------|-------------------|
-    | Id                | String, PK        |
-    | MedicId           | String, FK        |
-    | PatientDiseaseId  | String, FK        |
+    | Id                | Integer, PK       |
+    | MedicId           | Integer, FK       |
+    | PatientDiseaseId  | Integer, FK       |
     | Date              | Date              |
     | Status            | AppointmentStatus |
     | Notes             | String            |
@@ -87,8 +87,8 @@ cd backend ; uvicorn app.main:app
 
     | Column Name       | Column Type |
     |-------------------|-------------|
-    | Id                | String, PK  |
-    | MedicId           | String, FK  |
+    | Id                | Integer, PK |
+    | MedicId           | Integer, FK |
     | Day               | Day         |
     | FromTime          | String      |
     | ToTime            | String      |
