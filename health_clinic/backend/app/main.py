@@ -3,17 +3,22 @@ import os
 from flask import Flask, send_from_directory
 from sqlalchemy import inspect
 
-from app.routers import auth, book, user
+import app.models as models
+import app.routers as routers
 from app.database import engine, Base, SessionLocal
-from app.models.user import User
-from app.models.book import Book, BookStatus
-from app.models.loan import Loan, LoanStatus
+
 
 
 app = Flask(__name__, static_folder='../../frontend/build')
-app.register_blueprint(auth.auth_bp)
-app.register_blueprint(user.user_bp)
-app.register_blueprint(book.book_bp)
+
+app.register_blueprint(routers.patient.patient_bp)
+app.register_blueprint(routers.disease.disease_bp)
+app.register_blueprint(routers.patient_disease.patient_disease_bp)
+
+app.register_blueprint(routers.medic.medic_bp)
+app.register_blueprint(routers.medic_disease_service.medic_disease_service_bp)
+app.register_blueprint(routers.medic_timetable.medic_timetable_bp)
+app.register_blueprint(routers.appointment.appointment_bp)
 
 # Serve React App
 @app.route('/', defaults={'path': ''})
@@ -66,17 +71,6 @@ def init_db():
         db.close()
 # check if db is initialized already
 
-if not inspect(engine).has_table("user"):
-    init_db()
-app.run(use_reloader=True, port=5000, threaded=True)
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-# app.include_router(book.router)
-# app.include_router(user.router)
+# if not inspect(engine).has_table("user"):
+#     init_db()
+# app.run(use_reloader=True, port=5000, threaded=True)

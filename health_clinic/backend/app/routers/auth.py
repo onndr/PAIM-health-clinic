@@ -25,8 +25,7 @@ def map_db_user_to_response_user(db_user: models.user.User) -> schemas.User:
         first_name=db_user.first_name if db_user.first_name else "",
         last_name=db_user.last_name if db_user.last_name else "",
         phone_number=db_user.phone_number if db_user.phone_number else "",
-        is_librarian=db_user.is_librarian,
-        version=db_user.version
+        is_librarian=db_user.is_librarian
     )
 
 def get_current_user():

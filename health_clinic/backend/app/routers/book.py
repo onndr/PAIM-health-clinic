@@ -17,8 +17,7 @@ def map_db_book_to_response_book(db_book: models.book.Book) -> schemas.Book:
         author=db_book.author,
         publication_date=str(db_book.publication_date),
         price=db_book.price,
-        status=db_book.status.value,
-        version=db_book.version
+        status=db_book.status.value
     )
 
 def map_db_loan_to_response_loan(db_loan: models.loan.Loan) -> schemas.Loan:
