@@ -35,13 +35,20 @@ def get_current_user():
     token = token[len("Bearer "):]
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("username")
-        if username is None:
+        email: str = payload.get("email")
+        is_patient: bool = payload.get("is_patient")
+        if email is None or is_patient is None:
             abort(401, "Could not validate credentials")
     except JWTError:
         abort(401, "Could not validate credentials")
     db = next(get_db())
-    user = db.query(models.user.User).filter(models.user.User.username == username).first()
+
+    user = None
+    if is_patient:
+        user = db.query(models.patient.Patient).filter(models.patient.Patient.email == email).first()
+    else:
+        user = db.query(models.medic.Medic).filter(models.medic.Medic.email == email).first()
+
     if user is None:
         abort(401, "Could not validate credentials")
     return user
@@ -56,23 +63,41 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-@auth_bp.route("/api/users/register", methods=["POST"])
+@auth_bp.route("/api/patients/register/", methods=["POST"])
 def register():
     data = request.get_json()
     db = next(get_db())
-    user = schemas.UserCreate(**data)
+    user = schemas.PatientCreate(**data)
     try:
-        created_user = crud.create_user(db=db, user=user)
+        created_user = crud.create_patient(db=db, user=user)
     except Exception as e:
-        return jsonify({"detail": str(e)}), 400
+        return abort(400, str(e))
+    return map_db_user_to_response_user(created_user).dict()
+
+@auth_bp.route("/api/medics/register/", methods=["POST"])
+def register():
+    data = request.get_json()
+    db = next(get_db())
+    user = schemas.MedicCreate(**data)
+    try:
+        created_user = crud.create_medic(db=db, user=user)
+    except Exception as e:
+        return abort(400, str(e))
     return map_db_user_to_response_user(created_user).dict()
 
 @auth_bp.route("/api/users/login", methods=["POST"])
 def login():
     data = request.get_json()
     db = get_db()
-    db_user = crud.get_user_by_username(next(db), username=data['username'])
+    data = {'is_patient': True}
+    db_user = crud.get_patient_by_email(next(db), email=data['email'])
+
+    if not db_user:
+        data['is_patient'] = False
+        db_user = crud.get_medic_by_email(next(db), email=data['email'])
+
     if not db_user or not pwd_context.verify(data['password'], db_user.hashed_password):
-        return jsonify({"detail": "Incorrect username or password"}), 400
-    access_token = create_access_token(data={"username": db_user.username})
-    return jsonify({"token": access_token, "token_type": "bearer", "is_librarian": db_user.is_librarian})
+        abort(401, "Invalid credentials")
+
+    access_token = create_access_token(data={"email": db_user.email, **data})
+    return jsonify({"token": access_token, "token_type": "bearer", 'is_patient': data['is_patient']})

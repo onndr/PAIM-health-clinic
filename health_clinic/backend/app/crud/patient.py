@@ -40,6 +40,9 @@ def delete_patient(db: Session, patient_id: int):
 def get_patient(db: Session, patient_id: int):
     return db.query(Patient).filter(Patient.id == patient_id).first()
 
+def get_patient_by_email(db: Session, email: str):
+    return db.query(Patient).filter(Patient.email == email).first()
+
 def get_patients(db: Session):
     return db.query(Patient).all()
 

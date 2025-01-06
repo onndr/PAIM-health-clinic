@@ -39,6 +39,9 @@ def delete_medic(db: Session, medic_id: int):
 def get_medic(db: Session, medic_id: int):
     return db.query(Medic).filter(Medic.id == medic_id).first()
 
+def get_medic_by_email(db: Session, email: str):
+    return db.query(Medic).filter(Medic.email == email).first()
+
 def get_medics(db: Session):
     return db.query(Medic).all()
 
