@@ -11,6 +11,7 @@ from app.database import engine, Base, SessionLocal
 
 app = Flask(__name__, static_folder='../../frontend/build')
 
+app.register_blueprint(routers.auth.auth_bp)
 app.register_blueprint(routers.patient.patient_bp)
 app.register_blueprint(routers.disease.disease_bp)
 app.register_blueprint(routers.patient_disease.patient_disease_bp)

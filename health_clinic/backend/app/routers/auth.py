@@ -17,15 +17,24 @@ SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-def map_db_user_to_response_user(db_user: models.user.User) -> schemas.User:
+def map_db_patient_to_response_patient(db_user: models.patient.Patient) -> schemas.Patient:
     return schemas.User(
         id=db_user.id,
-        username=db_user.username if db_user.username else "",
         email=db_user.email if db_user.email else "",
         first_name=db_user.first_name if db_user.first_name else "",
         last_name=db_user.last_name if db_user.last_name else "",
         phone_number=db_user.phone_number if db_user.phone_number else "",
-        is_librarian=db_user.is_librarian
+        pesel=db_user.pesel if db_user.pesel else "",
+    )
+
+def map_db_medic_to_response_medic(db_user: models.medic.Medic) -> schemas.Medic:
+    return schemas.User(
+        id=db_user.id,
+        email=db_user.email if db_user.email else "",
+        first_name=db_user.first_name if db_user.first_name else "",
+        last_name=db_user.last_name if db_user.last_name else "",
+        phone_number=db_user.phone_number if db_user.phone_number else "",
+        pesel=db_user.pesel if db_user.pesel else "",
     )
 
 def get_current_user():
@@ -43,7 +52,6 @@ def get_current_user():
         abort(401, "Could not validate credentials")
     db = next(get_db())
 
-    user = None
     if is_patient:
         user = db.query(models.patient.Patient).filter(models.patient.Patient.email == email).first()
     else:
@@ -51,7 +59,11 @@ def get_current_user():
 
     if user is None:
         abort(401, "Could not validate credentials")
-    return user
+
+    if is_patient:
+        return map_db_patient_to_response_patient(user)
+    else:
+        return map_db_medic_to_response_medic(user)
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
@@ -64,7 +76,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 @auth_bp.route("/api/patients/register/", methods=["POST"])
-def register():
+def register_patient():
     data = request.get_json()
     db = next(get_db())
     user = schemas.PatientCreate(**data)
@@ -72,10 +84,10 @@ def register():
         created_user = crud.create_patient(db=db, user=user)
     except Exception as e:
         return abort(400, str(e))
-    return map_db_user_to_response_user(created_user).dict()
+    return map_db_patient_to_response_patient(created_user).dict()
 
 @auth_bp.route("/api/medics/register/", methods=["POST"])
-def register():
+def register_medic():
     data = request.get_json()
     db = next(get_db())
     user = schemas.MedicCreate(**data)
@@ -83,7 +95,7 @@ def register():
         created_user = crud.create_medic(db=db, user=user)
     except Exception as e:
         return abort(400, str(e))
-    return map_db_user_to_response_user(created_user).dict()
+    return map_db_medic_to_response_medic(created_user).dict()
 
 @auth_bp.route("/api/users/login", methods=["POST"])
 def login():

@@ -1,3 +1,4 @@
+from .auth import *
 from .patient import *
 from .medic import *
 from .disease import *
