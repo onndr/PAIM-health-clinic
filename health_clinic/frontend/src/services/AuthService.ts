@@ -1,26 +1,36 @@
 import axios from 'axios';
 
-const apiUrl = '/api/users';
+const USERS_API_URL = '/api/users';
+const PATIENTS_API_URL = '/api/patients';
+const MEDICS_API_URL = '/api/medics';
 
 const register = (userData: any) => {
-  return axios.post(`${apiUrl}/register`, userData);
+  return axios.post(`${USERS_API_URL}/register`, userData);
+};
+
+const register_patient = (userData: any) => {
+  return axios.post(`${PATIENTS_API_URL}/register`, userData);
+};
+
+const register_medic = (userData: any) => {
+  return axios.post(`${MEDICS_API_URL}/register`, userData);
 };
 
 const login = (credentials: any) => {
-  return axios.post(`${apiUrl}/login`, credentials);
+  return axios.post(`${USERS_API_URL}/login`, credentials);
 };
 
 const logout = () => {
   localStorage.removeItem('token');
-  localStorage.removeItem('is_librarian');
+  localStorage.removeItem('is_patient');
 }
 
 const isLoggedIn = () => {
   return localStorage.getItem('token') != null;
 }
 
-const isLibrarian = () => {
-  return localStorage.getItem('is_librarian') == 'true';
+const isPatient = () => {
+  return localStorage.getItem('is_patient') == 'true';
 }
 
 export default {
@@ -28,5 +38,5 @@ export default {
   login,
   logout,
   isLoggedIn,
-  isLibrarian
+  isPatient
 };
