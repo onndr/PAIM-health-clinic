@@ -2,14 +2,14 @@ version: "3.8"
 
 services:
   db:
-    container_name: library-db
+    container_name: health-clinic-db
     image: postgres:latest
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=bestPassword123
-      - POSTGRES_DB=library
+      - POSTGRES_DB=health_clinic
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

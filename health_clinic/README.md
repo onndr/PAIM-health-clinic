@@ -1,10 +1,10 @@
 ---
-title: Library React + FastAPI project
-author: Andrii Gamalii
+title: Health Clinic (React + Flask + PostgreSQL project)
+author: Andrii Gamalii, Adam Kowalkowski
 date: 04.01.2024
 ---
 
-## Library React + FastAPI project
+## Health Clinic (React + Flask + PostgreSQL project)
 
 ### How to run
 
@@ -20,45 +20,78 @@ cd backend ; uvicorn app.main:app
 
 ##### Special types
 
-- Enum BookStatus = {Available, Reserved, Loaned, PermanentlyUnavailable}
-- Enum LoanStatus = {Reserved, Taken, Returned, ReservationCancelled, ReservationExpired}
+- Enum AppointmentStatus = {Reserved, Realized, Cancelled, Expired}
+- Enum Day = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday}
 
 ##### Tables
 
-1. Users
+1. Patients
 
     | Column Name   | Column Type |
     |---------------|-------------|
-    | Id            | String, PK  |
-    | UserName      | String      |
+    | Id            | Integer, PK |
     | FirstName     | String      |
     | LastName      | String      |
     | Email         | String      |
     | PhoneNumber   | String      |
-    | Password      | String      |
-    | IsLibrarian   | Bool        |
-    | Version       | Number      |
+    | Pesel         | String      |
+    | HashedPass    | String      |
 
-2. Books
+2. Diseases
 
     | Column Name       | Column Type |
     |-------------------|-------------|
-    | Id                | String, PK  |
-    | Title             | String      |
-    | Author            | String      |
-    | Publisher         | String      |
-    | PublicationDate   | Date        |
-    | Price             | Number      |
-    | Status            | BookStatus  |
-    | Version           | Number      |
+    | Id                | Integer, PK |
+    | Name              | String      |
 
-3. Loans
+3. PatientDisease
 
-    | Column Name       | Column Type   |
-    |-------------------|---------------|
-    | Id                | String, PK    |
-    | BookId            | String, FK    |
-    | UserId            | String, FK    |
-    | FromDate          | Date          |
-    | ToDate            | Date          |
-    | Status            | LoanStatus    |
+    | Column Name       | Column Type |
+    |-------------------|-------------|
+    | Id                | Integer, PK |
+    | PatientId         | Integer, FK |
+    | DiseaseId         | Integer, FK |
+
+4. Medics
+
+    | Column Name   | Column Type |
+    |---------------|-------------|
+    | Id            | Integer, PK |
+    | FirstName     | String      |
+    | LastName      | String      |
+    | Email         | String      |
+    | PhoneNumber   | String      |
+    | Pesel         | String      |
+    | HashedPass    | String      |
+
+5. MedicDiseaseService
+
+    | Column Name       | Column Type |
+    |-------------------|-------------|
+    | Id                | Integer, PK |
+    | MedicId           | Integer, FK |
+    | DiseaseId         | Integer, FK |
+    | Service           | String      |
+
+6. Appointments
+
+    | Column Name       | Column Type       |
+    |-------------------|-------------------|
+    | Id                | Integer, PK       |
+    | MedicId           | Integer, FK       |
+    | PatientDiseaseId  | Integer, FK       |
+    | Date              | Date              |
+    | Status            | AppointmentStatus |
+    | MedicNotes        | String            |
+    | PatientRate       | Number            |
+    | PatientFeedback   | String            |
+
+7. MedicTimetable
+
+    | Column Name       | Column Type |
+    |-------------------|-------------|
+    | Id                | Integer, PK |
+    | MedicId           | Integer, FK |
+    | Day               | Day         |
+    | FromTime          | Time        |
+    | ToTime            | Time        |

@@ -28,7 +28,7 @@ Thumbs.db
 # Ignore temporary files
 *.tmp
 *.swp
-# Ignore FastAPI specific files
+# Ignore python specific files
 __pycache__/
 *.pyc
 *.pyo
