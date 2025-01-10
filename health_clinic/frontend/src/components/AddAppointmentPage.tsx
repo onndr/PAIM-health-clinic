@@ -1,35 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BookService from '../services/BookService';
+import AppointmentService from '../services/AppointmentService';
 import { useAuth } from '../context/AuthContext';
 
-const AddBookPage: React.FC = () => {
-  const [bookData, setBookData] = useState({ title: '', author: '', publication_date: '', price: 0, version: 0 });
-  const { isLibrarian } = useAuth();
+const AddAppointmentPage: React.FC = () => {
+  const [appointmentData, setAppointmentData] = useState({ title: '', author: '', publication_date: '', price: 0, version: 0 });
+  const { isPatient } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBookData({ ...bookData, [e.target.name]: e.target.value });
+    setAppointmentData({ ...appointmentData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    bookData.price = parseFloat(bookData.price as any);
-    bookData.publication_date = new Date(bookData.publication_date).toISOString().split('T')[0];
-    BookService.addBook(bookData).then((response: any) => {
-      // check if response contains book data
+    appointmentData.price = parseFloat(appointmentData.price as any);
+    appointmentData.publication_date = new Date(appointmentData.publication_date).toISOString().split('T')[0];
+    AppointmentService.createAppointment(appointmentData).then((response: any) => {
+      // check if response contains appointment data
       if (response.data.id) {
-        alert('Book added successfully');
-        navigate('/books');
+        alert('Appointment added successfully');
+        navigate('/appointments');
       } else {
-        alert('Failed to add book');
+        alert('Failed to add appointment');
       }
     });
   };
 
   return (
     <div className="container mt-5">
-      {isLibrarian && <h1 className="mb-4">Add Book</h1>}
+      {isPatient && <h1 className="mb-4">Add Appointment</h1>}
       <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="title" className="form-label">Title</label>
@@ -53,4 +53,4 @@ const AddBookPage: React.FC = () => {
   );
 };
 
-export default AddBookPage;
+export default AddAppointmentPage;

@@ -4,7 +4,7 @@ import AuthService from '../services/AuthService';
 import { useAuth } from '../context/AuthContext';
 
 const RegisterPage: React.FC = () => {
-  const [userData, setUserData] = useState({
+  const [patientData, setPatientData] = useState({
     username: '',
     password: '',
     password_confirmation: '',
@@ -12,23 +12,24 @@ const RegisterPage: React.FC = () => {
     first_name: '',
     last_name: '',
     phone_number: '',
-    version: 0
+    version: 0,
+    pesel: ''
   });
   const { register } = useAuth();
 
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setPatientData({ ...patientData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (userData.password !== userData.password_confirmation) {
+    if (patientData.password !== patientData.password_confirmation) {
       alert('Password and password confirmation do not match');
       return;
     }
-    register(userData).then(response => {
+    register(patientData).then(response => {
       if (response.data.id) {
         alert('User registered successfully');
         navigate('/login');
@@ -47,6 +48,9 @@ const RegisterPage: React.FC = () => {
       </div>
       <div className="form-group mb-3">
         <input type="email" name="email" className="form-control" placeholder="Email" onChange={handleChange} />
+      </div>
+      <div className="form-group mb-3">
+        <input type="pesel" name="pesel" className="form-control" placeholder="Pesel" onChange={handleChange} />
       </div>
       <div className="form-group mb-3">
         <input type="text" name="first_name" className="form-control" placeholder="First Name" onChange={handleChange} />
