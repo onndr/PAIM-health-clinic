@@ -101,7 +101,7 @@ def register_medic():
 def login():
     data = request.get_json()
     db = get_db()
-    data = {'is_patient': True}
+    data = {**data, 'is_patient': True}
     db_user = crud.get_patient_by_email(next(db), email=data['email'])
 
     if not db_user:

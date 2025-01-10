@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const { login } = useAuth(); // Funkcja login z kontekstu uwierzytelniania
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(credentials.username, credentials.password)
+    login(credentials.email, credentials.password)
       .then((response) => {
         if (response.data.token) {
           // Zapis tokenu i informacji o pacjencie do localStorage
@@ -37,13 +37,13 @@ const LoginPage: React.FC = () => {
       <h1 className="text-center">Login</h1>
       <form onSubmit={handleSubmit} className="w-50 mx-auto">
         <div className="form-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
-            name="username"
-            id="username"
+            name="email"
+            id="email"
             className="form-control"
-            value={credentials.username}
+            value={credentials.email}
             onChange={handleChange}
             required
           />

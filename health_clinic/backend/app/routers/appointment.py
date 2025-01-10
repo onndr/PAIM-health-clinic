@@ -14,7 +14,7 @@ def map_db_appointment_to_response_appointment(db_appointment: models.medic.Appo
         medic_id=db_appointment.medic_id,
         patient_disease_id=db_appointment.patient_disease_id,
         termin=str(db_appointment.termin),
-        status=db_appointment.status,
+        status=db_appointment.status.name,
         medic_notes=db_appointment.medic_notes,
         patient_rate=db_appointment.patient_rate,
         patient_feedback=db_appointment.patient_feedback

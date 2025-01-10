@@ -46,10 +46,10 @@ class MedicDiseaseService(MedicDiseaseServiceBase):
 
 # AppointmentStatus enum
 class AppointmentStatus(enum.Enum):
-    Reserved = 'RESERVED'
-    Realized = 'REALIZED'
-    Cancelled = 'CANCELLED'
-    Expired = 'EXPIRED'
+    Reserved = 'Reserved'
+    Realized = 'Realized'
+    Cancelled = 'Cancelled'
+    Expired = 'Expired'
 
 # Appointment schemas
 class AppointmentBase(BaseModel):

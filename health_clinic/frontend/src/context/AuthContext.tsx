@@ -4,7 +4,7 @@ import AuthService from '../services/AuthService';
 interface AuthContextType {
   isLoggedIn: boolean;
   isPatient: boolean;
-  login: (username: string, password: string ) => Promise<any>;
+  login: (email: string, password: string ) => Promise<any>;
   logout: () => void;
   register: (userData: any) => Promise<any>;
 }
@@ -15,8 +15,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoggedIn, setIsLoggedIn] = useState(AuthService.isLoggedIn());
   const [isPatient, setIsPatient] = useState(AuthService.isPatient());
 
-  const login = async (username: string, password: string ) => {
-    const response = await AuthService.login({"username": username, "password": password});
+  const login = async (email: string, password: string ) => {
+    const response = await AuthService.login({"email": email, "password": password});
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('is_patient', response.data.is_patient);
