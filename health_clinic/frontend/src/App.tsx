@@ -7,11 +7,14 @@ import AppointmentListPage from './components/AppointmentListPage'; // Strona do
 import AppointmentDetailPage from './components/AppointmentDetailPage'; // Strona szczegółów wizyty
 import AddAppointmentPage from './components/AddAppointmentPage'; // Strona dodawania wizyty
 import UserDetailPage from './components/UserDetailPage'; // Strona szczegółów użytkownika
+import SearchMedicServicesPage from './components/SearchMedicServicesPage'; // Wyszukiwanie usług
+import AddWorkingHoursPage from './components/AddWorkingHoursPage'; // Dodawanie godzin pracy
+import AddDiseasePage from './components/AddDiseasePage'; // Dodawanie choroby
 import './App.css';
 import { useAuth } from './context/AuthContext';
 
 const App: React.FC = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, isPatient, logout } = useAuth();
 
   return (
     <Router>
@@ -37,9 +40,25 @@ const App: React.FC = () => {
                 </li>
                 {isLoggedIn ? (
                   <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/appointments">Appointments</Link>
-                    </li>
+                    {isPatient ? (
+                      <>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/appointments">Appointments</Link>
+                        </li>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/services">Search Services</Link>
+                        </li>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/add-disease">Add Disease</Link>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li className="nav-item">
+                          <Link className="nav-link" to="/working-hours">Add Working Hours</Link>
+                        </li>
+                      </>
+                    )}
                     <li className="nav-item">
                       <Link className="nav-link" to="/me">Account</Link>
                     </li>
@@ -70,6 +89,9 @@ const App: React.FC = () => {
         <Route path="/appointments/add" element={<AddAppointmentPage />} /> {/* Dodawanie wizyty */}
         <Route path="/appointments/:id" element={<AppointmentDetailPage />} /> {/* Szczegóły wizyty */}
         <Route path="/me" element={<UserDetailPage />} /> {/* Dane użytkownika */}
+        <Route path="/services" element={<SearchMedicServicesPage />} /> {/* Wyszukiwanie usług */}
+        <Route path="/working-hours" element={<AddWorkingHoursPage />} /> {/* Dodawanie godzin pracy */}
+        <Route path="/add-disease" element={<AddDiseasePage />} /> {/* Dodawanie choroby */}
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </Router>
