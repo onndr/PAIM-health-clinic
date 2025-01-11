@@ -37,10 +37,10 @@ class MedicDiseaseService(Base):
 
 
 class AppointmentStatus(enum.Enum):
-    Reserved = 'RESERVED'
-    Realized = 'REALIZED'
-    Cancelled = 'CANCELLED'
-    Expired = 'EXPIRED'
+    Reserved = 'Reserved'
+    Realized = 'Realized'
+    Cancelled = 'Cancelled'
+    Expired = 'Expired'
 
 class Appointment(Base):
     __tablename__ = 'appointment'
