@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PatientService from '../services/PatientService';
 import AppointmentService from '../services/AppointmentService';
 import { useAuth } from '../context/AuthContext';
+import MedicService from '../services/MedicService';
 
 const UserDetailPage: React.FC = () => {
   const [patient, setPatient] = useState<any>(null);
@@ -16,26 +17,32 @@ const UserDetailPage: React.FC = () => {
       return;
     }
 
-    // Pobierz ID zalogowanego pacjenta (np. z kontekstu `useAuth` lub tokena w `localStorage`)
-    const patientId = localStorage.getItem('user_id'); // lub z kontekstu: useAuth().id
+    // Pobierz ID zalogowanego użytkownika (np. z kontekstu `useAuth` lub tokena w `localStorage`)
+    const userId = localStorage.getItem('user_id'); // lub z kontekstu: useAuth().id
 
-    if (!patientId) {
+    if (!userId) {
       console.error('No patient ID found.');
       navigate('/login');
       return;
     }
 
-    // Pobierz dane pacjenta na podstawie jego ID
-    PatientService.getPatient(patientId)
+    if (isPatient){
+      var getData = PatientService.getPatient;
+    } else {
+      var getData = MedicService.getMedic;
+    }
+
+    // Pobierz dane użytkownika na podstawie jego ID
+    getData(userId)
       .then((response) => {
         setPatient(response.data);
 
-        // Pobierz wizyty pacjenta
+        // Pobierz wizyty użytkownika
         return AppointmentService.readAppointments();
       })
       .then((response) => {
         const userAppointments = response.data.filter(
-          (appointment: any) => appointment.patient_id === parseInt(patientId, 10)
+          (appointment: any) => appointment.patient_id === parseInt(userId, 10)
         );
         setAppointments(userAppointments);
       })

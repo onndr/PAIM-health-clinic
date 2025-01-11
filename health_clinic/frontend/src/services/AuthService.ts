@@ -5,7 +5,11 @@ const PATIENTS_API_URL = '/api/patients';
 const MEDICS_API_URL = '/api/medics';
 
 const register = (userData: any) => {
-  return axios.post(`${USERS_API_URL}/register`, userData);
+  if (userData.is_medic) {
+    return register_medic(userData);
+  } else {
+    return register_patient(userData);
+  }
 };
 
 const register_patient = (userData: any) => {

@@ -81,7 +81,7 @@ def register_patient():
     db = next(get_db())
     user = schemas.PatientCreate(**data)
     try:
-        created_user = crud.create_patient(db=db, user=user)
+        created_user = crud.create_patient(db=db, patient=user)
     except Exception as e:
         return abort(400, str(e))
     return map_db_patient_to_response_patient(created_user).dict()
@@ -92,7 +92,7 @@ def register_medic():
     db = next(get_db())
     user = schemas.MedicCreate(**data)
     try:
-        created_user = crud.create_medic(db=db, user=user)
+        created_user = crud.create_medic(db=db, medic=user)
     except Exception as e:
         return abort(400, str(e))
     return map_db_medic_to_response_medic(created_user).dict()
@@ -100,13 +100,13 @@ def register_medic():
 @auth_bp.route("/api/users/login", methods=["POST"])
 def login():
     data = request.get_json()
-    db = get_db()
+    db = next(get_db())
     data = {**data, 'is_patient': True}
-    db_user = crud.get_patient_by_email(next(db), email=data['email'])
+    db_user = crud.get_patient_by_email(db, email=data['email'])
 
     if not db_user:
         data['is_patient'] = False
-        db_user = crud.get_medic_by_email(next(db), email=data['email'])
+        db_user = crud.get_medic_by_email(db, email=data['email'])
 
     if not db_user or not pwd_context.verify(data['password'], db_user.hashed_password):
         abort(401, "Invalid credentials")

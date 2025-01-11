@@ -1,35 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
 import { useAuth } from '../context/AuthContext';
 
 const RegisterPage: React.FC = () => {
-  const [patientData, setPatientData] = useState({
-    username: '',
+  const [userData, setPatientData] = useState({
     password: '',
     password_confirmation: '',
     email: '',
     first_name: '',
     last_name: '',
     phone_number: '',
-    version: 0,
-    pesel: ''
+    pesel: '',
+    is_medic: false
   });
   const { register } = useAuth();
 
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPatientData({ ...patientData, [e.target.name]: e.target.value });
+    setPatientData({ ...userData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (patientData.password !== patientData.password_confirmation) {
+    if (userData.password !== userData.password_confirmation) {
       alert('Password and password confirmation do not match');
       return;
     }
-    register(patientData).then(response => {
+    register(userData).then(response => {
       if (response.data.id) {
         alert('User registered successfully');
         navigate('/login');
@@ -43,9 +41,6 @@ const RegisterPage: React.FC = () => {
     <div className="container mt-5">
       <h1 className="text-center">Register</h1>
       <form onSubmit={handleSubmit} className="w-50 mx-auto">
-      <div className="form-group mb-3">
-        <input type="text" name="username" className="form-control" placeholder="Username" onChange={handleChange} />
-      </div>
       <div className="form-group mb-3">
         <input type="email" name="email" className="form-control" placeholder="Email" onChange={handleChange} />
       </div>
@@ -66,6 +61,10 @@ const RegisterPage: React.FC = () => {
       </div>
       <div className="form-group mb-3">
         <input type="password" name="password_confirmation" className="form-control" placeholder="Confirm Password" onChange={handleChange} />
+      </div>
+      <div className="form-group mb-3">
+        <label className="form-check-label" htmlFor="is_medic">Register as Medic</label>
+        <input type="checkbox" name="is_medic" className="form-check-input" onChange={handleChange} />
       </div>
       <button type="submit" className="btn btn-primary w-100">Register</button>
       </form>
