@@ -17,7 +17,7 @@ const UserDetailPage: React.FC = () => {
     }
 
     // Pobierz ID zalogowanego pacjenta (np. z kontekstu `useAuth` lub tokena w `localStorage`)
-    const patientId = localStorage.getItem('patient_id'); // lub z kontekstu: useAuth().id
+    const patientId = localStorage.getItem('user_id'); // lub z kontekstu: useAuth().id
 
     if (!patientId) {
       console.error('No patient ID found.');
@@ -99,18 +99,6 @@ const UserDetailPage: React.FC = () => {
       {patient && (
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">Username</label>
-            <input
-              type="text"
-              className="form-control"
-              id="username"
-              name="username"
-              value={patient.username || ''}
-              onChange={handleChange}
-              disabled
-            />
-          </div>
-          <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>
             <input
               type="text"
@@ -152,6 +140,17 @@ const UserDetailPage: React.FC = () => {
               name="phone_number"
               value={patient.phone_number || ''}
               onChange={handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="pesel" className="form-label">Pesel</label>
+            <input
+              type="text"
+              className="form-control"
+              id="pesel"
+              name="pesel"
+              value={patient.pesel}
+              disabled={true}
             />
           </div>
           <button type="submit" className="btn btn-primary">Update</button>

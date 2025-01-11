@@ -18,7 +18,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def map_db_patient_to_response_patient(db_user: models.patient.Patient) -> schemas.Patient:
-    return schemas.User(
+    return schemas.Patient(
         id=db_user.id,
         email=db_user.email if db_user.email else "",
         first_name=db_user.first_name if db_user.first_name else "",
@@ -28,7 +28,7 @@ def map_db_patient_to_response_patient(db_user: models.patient.Patient) -> schem
     )
 
 def map_db_medic_to_response_medic(db_user: models.medic.Medic) -> schemas.Medic:
-    return schemas.User(
+    return schemas.Medic(
         id=db_user.id,
         email=db_user.email if db_user.email else "",
         first_name=db_user.first_name if db_user.first_name else "",
@@ -112,4 +112,4 @@ def login():
         abort(401, "Invalid credentials")
 
     access_token = create_access_token(data={"email": db_user.email, **data})
-    return jsonify({"token": access_token, "token_type": "bearer", 'is_patient': data['is_patient']})
+    return jsonify({"token": access_token, "token_type": "bearer", 'is_patient': data['is_patient'], 'id': db_user.id})

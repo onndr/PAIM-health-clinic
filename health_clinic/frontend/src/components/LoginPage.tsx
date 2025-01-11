@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
           // Zapis tokenu i informacji o pacjencie do localStorage
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('is_patient', response.data.is_patient);
-          localStorage.setItem('patient_id', response.data.id); // Przechowaj ID pacjenta
+          localStorage.setItem('user_id', response.data.id); // Przechowaj ID pacjenta
           alert('Login successful');
           navigate('/appointments'); // Przekierowanie po zalogowaniu
         } else {
