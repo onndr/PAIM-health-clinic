@@ -81,6 +81,9 @@ def register_patient():
     db = next(get_db())
     user = schemas.PatientCreate(**data)
     try:
+        db_user = crud.get_patient_by_email(db, email=user.email)
+        if db_user:
+            return abort(400, "User with this email already exists")
         created_user = crud.create_patient(db=db, patient=user)
     except Exception as e:
         return abort(400, str(e))
@@ -92,6 +95,9 @@ def register_medic():
     db = next(get_db())
     user = schemas.MedicCreate(**data)
     try:
+        db_user = crud.get_medic_by_email(db, email=user.email)
+        if db_user:
+            return abort(400, "User with this email already exists")
         created_user = crud.create_medic(db=db, medic=user)
     except Exception as e:
         return abort(400, str(e))

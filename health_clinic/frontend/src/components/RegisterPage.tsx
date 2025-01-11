@@ -62,8 +62,8 @@ const RegisterPage: React.FC = () => {
       <div className="form-group mb-3">
         <input type="password" name="password_confirmation" className="form-control" placeholder="Confirm Password" onChange={handleChange} />
       </div>
-      <div className="form-group mb-3">
-        <label className="form-check-label" htmlFor="is_medic">Register as Medic</label>
+      <div className="form-group mb-3 d-flex align-items-center">
+        <label className="form-check-label me-2" htmlFor="is_medic">Register as Medic</label>
         <input type="checkbox" name="is_medic" className="form-check-input" onChange={handleChange} />
       </div>
       <button type="submit" className="btn btn-primary w-100">Register</button>
