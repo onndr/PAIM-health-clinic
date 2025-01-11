@@ -27,6 +27,12 @@ const RegisterPage: React.FC = () => {
       alert('Password and password confirmation do not match');
       return;
     }
+
+    if (userData.pesel == '') {
+      alert('PESEL is required');
+      return;
+    }
+
     register(userData).then(response => {
       if (response.data.id) {
         alert('User registered successfully');

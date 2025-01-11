@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import MedicService from '../services/MedicService';
 
 const UserDetailPage: React.FC = () => {
-  const [patient, setPatient] = useState<any>(null);
+  const [userData, setPatient] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const { isLoggedIn, isPatient, logout } = useAuth(); // Zakładamy, że kontekst zwraca dane o zalogowanym użytkowniku
   const navigate = useNavigate();
@@ -53,12 +53,19 @@ const UserDetailPage: React.FC = () => {
   }, [isLoggedIn]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPatient({ ...patient, [e.target.name]: e.target.value });
+    setPatient({ ...userData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    PatientService.updatePatient(patient)
+
+    if (isPatient){
+      var updateData = PatientService.updatePatient;
+    } else {
+      var updateData = MedicService.updateMedic;
+    }
+
+    updateData(userData)
       .then((response: any) => {
         if (response.data.id) {
           alert('Your account details updated successfully');
@@ -88,7 +95,7 @@ const UserDetailPage: React.FC = () => {
       return;
     }
 
-    PatientService.deletePatient(patient.id)
+    PatientService.deletePatient(userData.id)
       .then(() => {
         logout();
         navigate('/');
@@ -103,7 +110,7 @@ const UserDetailPage: React.FC = () => {
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Account Detail</h1>
-      {patient && (
+      {userData && (
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>
@@ -112,7 +119,7 @@ const UserDetailPage: React.FC = () => {
               className="form-control"
               id="email"
               name="email"
-              value={patient.email || ''}
+              value={userData.email || ''}
               onChange={handleChange}
             />
           </div>
@@ -123,7 +130,7 @@ const UserDetailPage: React.FC = () => {
               className="form-control"
               id="first_name"
               name="first_name"
-              value={patient.first_name || ''}
+              value={userData.first_name || ''}
               onChange={handleChange}
             />
           </div>
@@ -134,7 +141,7 @@ const UserDetailPage: React.FC = () => {
               className="form-control"
               id="last_name"
               name="last_name"
-              value={patient.last_name || ''}
+              value={userData.last_name || ''}
               onChange={handleChange}
             />
           </div>
@@ -145,7 +152,7 @@ const UserDetailPage: React.FC = () => {
               className="form-control"
               id="phone_number"
               name="phone_number"
-              value={patient.phone_number || ''}
+              value={userData.phone_number || ''}
               onChange={handleChange}
             />
           </div>
@@ -156,7 +163,7 @@ const UserDetailPage: React.FC = () => {
               className="form-control"
               id="pesel"
               name="pesel"
-              value={patient.pesel}
+              value={userData.pesel}
               disabled={true}
             />
           </div>

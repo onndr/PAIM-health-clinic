@@ -22,7 +22,7 @@ def update_medic(db: Session, medic_id: int, medic: MedicUpdate):
     db_medic = db.query(Medic).filter(Medic.id == medic_id).first()
     if db_medic:
         for key, value in medic.dict().items():
-            if key == 'password':
+            if key == 'password' and value:
                 value = Medic.hash_password(value)
             setattr(db_medic, key, value)
         db.commit()
