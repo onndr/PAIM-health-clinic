@@ -1,11 +1,12 @@
 import axios from 'axios';
+import backendUrl from './utils';
 
 export interface Disease {
     id: number;
     name: string;
 }
 
-const DISEASES_API_URL = '/api/diseases';
+const DISEASES_API_URL = backendUrl + '/api/diseases';
 
 const axiosInstance = axios.create();
 

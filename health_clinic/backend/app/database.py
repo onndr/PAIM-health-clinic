@@ -1,9 +1,10 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-
-DATABASE_URL = "postgresql://postgres:bestPassword123@localhost/health_clinic"
+DATABASE_URL = os.getenv("DATABASE_ACCESS_STR", "")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

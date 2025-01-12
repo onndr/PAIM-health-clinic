@@ -1,8 +1,9 @@
 import axios from 'axios';
+import backendUrl from './utils';
 
-const USERS_API_URL = '/api/users';
-const PATIENTS_API_URL = '/api/patients';
-const MEDICS_API_URL = '/api/medics';
+const USERS_API_URL = backendUrl + '/api/users';
+const PATIENTS_API_URL = backendUrl + '/api/patients';
+const MEDICS_API_URL = backendUrl + '/api/medics';
 
 const register = (userData: any) => {
   if (userData.is_medic) {

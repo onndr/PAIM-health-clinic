@@ -1,17 +1,60 @@
 version: "3.8"
 
+networks:
+  health_clinic_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
 services:
   db:
     container_name: health-clinic-db
     image: postgres:latest
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=bestPassword123
-      - POSTGRES_DB=health_clinic
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      health_clinic_network:
+        ipv4_address: 172.20.0.2
+
+  backend:
+    container_name: health-clinic-backend
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+      health_clinic_network:
+        ipv4_address: 172.20.0.3
+
+  web:
+    build:
+      context: ./frontend
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.env:/app/.env
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+    command: ["yarn", "start"]
+    networks:
+      health_clinic_network:
+        ipv4_address: 172.20.0.4
 
 volumes:
-  postgres_data:
+    postgres_data:
+
+

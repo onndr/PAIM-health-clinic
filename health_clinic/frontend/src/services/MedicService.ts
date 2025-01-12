@@ -1,4 +1,5 @@
 import axios from 'axios';
+import backendUrl from './utils';
 
 export interface Medic {
   id: number;
@@ -9,7 +10,7 @@ export interface Medic {
   phone_number: string;
 }
 
-const MEDICS_API_URL = '/api/medics';
+const MEDICS_API_URL = backendUrl + '/api/medics';
 
 const axiosInstance = axios.create();
 

@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, send_from_directory
+from flask_cors import CORS
 from sqlalchemy import inspect, text
 
 import app.models as models
@@ -9,6 +10,9 @@ from app.database import engine, Base, SessionLocal
 
 
 app = Flask(__name__, static_folder='../../frontend/build')
+
+# Enable CORS
+CORS(app)
 
 app.register_blueprint(routers.auth.auth_bp)
 app.register_blueprint(routers.patient.patient_bp)
@@ -20,14 +24,9 @@ app.register_blueprint(routers.medic_disease_service.medic_disease_service_bp)
 app.register_blueprint(routers.medic_timetable.medic_timetable_bp)
 app.register_blueprint(routers.appointment.appointment_bp)
 
-# Serve React App
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+@app.route('/')
+def hello_world():
+    return "Hello, World!"
 
 Base.metadata.create_all(bind=engine)
 
@@ -170,4 +169,4 @@ def is_db_empty():
 if is_db_empty():
     init_db()
 
-app.run(use_reloader=True, port=5000, threaded=True)
+app.run(host="0.0.0.0", port=5000, threaded=True)

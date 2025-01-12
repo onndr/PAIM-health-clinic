@@ -1,4 +1,5 @@
 import axios from 'axios';
+import backendUrl from './utils';
 
 export interface Appointment {
     id: number;
@@ -11,7 +12,7 @@ export interface Appointment {
     patient_feedback: string;
   }
 
-const APPOINTMENTS_API_URL = '/api/appointments';
+const APPOINTMENTS_API_URL = backendUrl + '/api/appointments';
 
 const axiosInstance = axios.create();
 

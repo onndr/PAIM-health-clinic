@@ -1,4 +1,5 @@
 import axios from 'axios';
+import backendUrl from './utils';
 
 export interface MedicTimetable {
   id: number;
@@ -9,7 +10,7 @@ export interface MedicTimetable {
 }
 
 
-const MEDIC_TIMETABLES_API_URL = '/api/medic_timetables';
+const MEDIC_TIMETABLES_API_URL = backendUrl + '/api/medic_timetables';
 
 const axiosInstance = axios.create();
 
