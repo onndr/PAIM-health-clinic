@@ -4,6 +4,7 @@ import MedicTimetableService, { MedicTimetable } from '../services/MedicTimetabl
 import { useAuth } from '../context/AuthContext';
 
 const AddWorkingHoursPage: React.FC = () => {
+  const user_id = localStorage.getItem('user_id');
   const [day, setDay] = useState<string>('Monday');
   const [fromTime, setFromTime] = useState<string>('09:00');
   const [toTime, setToTime] = useState<string>('17:00');
@@ -34,7 +35,7 @@ const AddWorkingHoursPage: React.FC = () => {
       return;
     }
 
-    MedicTimetableService.createMedicTimetable({ day, from_time: fromTime, to_time: toTime })
+    MedicTimetableService.createMedicTimetable({ medic_id: user_id, day, from_time: fromTime, to_time: toTime })
       .then(({ data }) => setWorkingHours((prev) => [...prev, data]))
       .catch(() => alert('Failed to add working hours.'));
   };

@@ -85,7 +85,7 @@ def get_medic_disease_services(db: Session):
 def create_medic_timetable(db: Session, medic_timetable: MedicTimetableCreate):
     db_medic_timetable = MedicTimetable(
         medic_id=medic_timetable.medic_id,
-        day=medic_timetable.day,
+        day=str(medic_timetable.day.value),
         from_time=medic_timetable.from_time,
         to_time=medic_timetable.to_time
     )

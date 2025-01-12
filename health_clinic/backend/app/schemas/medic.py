@@ -76,13 +76,13 @@ class Appointment(AppointmentBase):
 
 # Day enum
 class Day(enum.Enum):
-    Monday = 'MONDAY'
-    Tuesday = 'TUESDAY'
-    Wednesday = 'WEDNESDAY'
-    Thursday = 'THURSDAY'
-    Friday = 'FRIDAY'
-    Saturday = 'SATURDAY'
-    Sunday = 'SUNDAY'
+    Monday = 'Monday'
+    Tuesday = 'Tuesday'
+    Wednesday = 'Wednesday'
+    Thursday = 'Thursday'
+    Friday = 'Friday'
+    Saturday = 'Saturday'
+    Sunday = 'Sunday'
 
 # MedicTimetable schemas
 class MedicTimetableBase(BaseModel):
