@@ -35,7 +35,8 @@ services:
       health_clinic_network:
         ipv4_address: 172.20.0.3
 
-  web:
+  frontend:
+    container_name: health-clinic-frontend
     build:
       context: ./frontend
       target: development

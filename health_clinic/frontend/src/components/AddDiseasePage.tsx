@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DiseaseService, { Disease } from '../services/DiseaseService';
 import { useAuth } from '../context/AuthContext';
+import PatientDiseaseService from '../services/PatientDiseaseService';
 
 const AddDiseasePage: React.FC = () => {
   const [diseases, setDiseases] = useState<Disease[]>([]);
@@ -39,7 +40,8 @@ const AddDiseasePage: React.FC = () => {
       return;
     }
 
-    DiseaseService.createDisease({ id: selectedDiseaseId, name: diseaseToAdd.name })
+    const userId = localStorage.getItem('user_id');
+    PatientDiseaseService.createPatientDisease({ disease_id: selectedDiseaseId, patient_id: userId })
       .then(() => {
         alert('Disease added successfully!');
         navigate('/appointments'); // Możesz przekierować na inną stronę po dodaniu choroby
