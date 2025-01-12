@@ -9,12 +9,7 @@ date: 04.01.2024
 ### How to run
 
 ```shell
-docker compose build web
-
-
 docker compose up -d
-cd ../frontend ; yarn build &
-cd backend ; uvicorn app.main:app
 ```
 
 ### Project decisions
