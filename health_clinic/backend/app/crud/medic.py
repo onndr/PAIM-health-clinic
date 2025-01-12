@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.medic import Medic, MedicDiseaseService, MedicTimetable, Appointment
+from app.models.medic import Medic, MedicDiseaseService, MedicTimetable, Appointment, AppointmentStatus
 from app.schemas.medic import MedicCreate, MedicUpdate, MedicDiseaseServiceCreate, MedicDiseaseServiceUpdate, MedicTimetableCreate, MedicTimetableUpdate, AppointmentCreate, AppointmentUpdate
 
 
@@ -123,7 +123,7 @@ def create_appointment(db: Session, appointment: AppointmentCreate):
         medic_id=appointment.medic_id,
         patient_disease_id=appointment.patient_disease_id,
         termin=appointment.termin,
-        status=appointment.status,
+        status=AppointmentStatus.Reserved,
         medic_notes=appointment.medic_notes,
         patient_rate=appointment.patient_rate,
         patient_feedback=appointment.patient_feedback

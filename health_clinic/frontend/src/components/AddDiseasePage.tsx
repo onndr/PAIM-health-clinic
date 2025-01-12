@@ -60,7 +60,6 @@ const AddDiseasePage: React.FC = () => {
       .then(() => {
         alert('Disease added successfully!');
         setPatientDiseases((prev) => [...prev, { id: Date.now(), patient_id: Number(userId), disease_id: selectedDiseaseId }]);
-        navigate('/appointments'); // Możesz przekierować na inną stronę po dodaniu choroby
       })
       .catch((error) => {
         console.error('Error adding disease:', error);
@@ -104,10 +103,12 @@ const AddDiseasePage: React.FC = () => {
         >
           <option value="">-- Select a disease --</option>
           {diseases.map((disease) => (
-            <option key={disease.id} value={disease.id}>
-              {disease.name}
-            </option>
-          ))}
+            // check if disease is not already added
+            !patientDiseases.find((pd) => pd.disease_id === disease.id) && (
+              <option key={disease.id} value={disease.id}>
+                {disease.name}
+              </option>
+          )))}
         </select>
       </div>
       <button className="btn btn-primary" onClick={handleAddDisease}>

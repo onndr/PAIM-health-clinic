@@ -6,9 +6,11 @@ import MedicDiseaseService, { MedicDiseaseService as MedicServiceType } from '..
 import MedicTimetableService, { MedicTimetable } from '../services/MedicTimetableService';
 import AppointmentService from '../services/AppointmentService';
 import { useAuth } from '../context/AuthContext';
+import PatientDiseaseService, { PatientDisease } from '../services/PatientDiseaseService';
 
 const SearchMedicServicesPage: React.FC = () => {
   const [diseases, setDiseases] = useState<Disease[]>([]);
+  const [patientDiseases, setPatientDiseases] = useState<PatientDisease[]>([]);
   const [medicServices, setMedicServices] = useState<MedicServiceType[]>([]);
   const [medics, setMedics] = useState<Medic[]>([]);
   const [timetables, setTimetables] = useState<MedicTimetable[]>([]);
@@ -27,7 +29,21 @@ const SearchMedicServicesPage: React.FC = () => {
       return;
     }
 
-    // Pobierz dane
+    // Pobierz listę chorób pacjenta
+    const userId = localStorage.getItem('user_id');
+    if (userId) {
+      PatientDiseaseService.getPatientDiseases()
+        .then((response) => {
+          const userDiseases = response.data.filter((disease: PatientDisease) => disease.patient_id === Number(userId));
+          setPatientDiseases(userDiseases);
+        })
+        .catch((error) => {
+          console.error('Error fetching patient diseases:', error);
+          alert('Failed to fetch patient diseases');
+        });
+    }
+
+    // Pobierz dane i ustaw tylko te usługi
     DiseaseService.getDiseases().then((response) => setDiseases(response.data)).catch(console.error);
     MedicDiseaseService.getMedicDiseaseServices()
       .then((response) => setMedicServices(response.data))
@@ -48,6 +64,23 @@ const SearchMedicServicesPage: React.FC = () => {
     }
   }, [selectedDiseaseId, medicServices]);
 
+  const getNextDateForDay = (dayOfWeek: string) => {
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const today = new Date();
+    const todayDayOfWeek = today.getDay();
+    const targetDayOfWeek = daysOfWeek.indexOf(dayOfWeek);
+
+    let daysUntilNext = targetDayOfWeek - todayDayOfWeek;
+    if (daysUntilNext < 0) {
+        daysUntilNext += 7;
+    }
+
+    const nextDate = new Date(today);
+    nextDate.setDate(today.getDate() + daysUntilNext);
+
+    return nextDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+  };
+
   // Pobieranie dostępnych terminów lekarza
   const handleSelectService = (serviceId: number) => {
     setSelectedServiceId(serviceId);
@@ -60,7 +93,20 @@ const SearchMedicServicesPage: React.FC = () => {
     const times: string[] = [];
     medicTimetables.forEach((timetable) => {
       const { day, from_time, to_time } = timetable;
-      times.push(`${day} ${from_time} - ${to_time}`);
+      // here day is in format Day.DayOfWeek, e.g. Day.Monday
+      // we need to convert it to YYYY-MM-DD format
+      const dayOfWeek = day.split('.')[1]; // Extract the day of the week
+      const formattedDate = getNextDateForDay(dayOfWeek);
+
+      // now for each hour from from_time to to_time, add a time slot of 1 hour
+      const fromHour = parseInt(from_time.split(':')[0], 10);
+      const toHour = parseInt(to_time.split(':')[0], 10);
+
+      for (let hour = fromHour; hour < toHour; hour++) {
+        const fromFormattedHour = hour.toString().padStart(2, '0');
+        const toFormattedHour = (hour + 1).toString().padStart(2, '0');
+        times.push(`${formattedDate} ${fromFormattedHour}:00 - ${toFormattedHour}:00`);
+      }
     });
 
     setAvailableTimes(times);
@@ -88,11 +134,14 @@ const SearchMedicServicesPage: React.FC = () => {
     const [day, timeRange] = selectedTime.split(' ');
     const [fromTime] = timeRange.split(' - ');
 
+    const formattedDay = new Date(day).toISOString().split('T')[0]; // Ensure day is in YYYY-MM-DD format
+    const formattedFromTime = fromTime.length === 5 ? `${fromTime}:00` : fromTime; // Ensure fromTime is in HH:MM:SS format
+
     const appointmentData = {
       medic_id: selectedService.medic_id,
       patient_disease_id: selectedService.disease_id,
-      termin: `${day}T${fromTime}`, // Przyjmując format ISO 8601
-      status: 'pending',
+      termin: `${formattedDay}T${formattedFromTime}`, // Przyjmując format ISO 8601
+      status: 'Reserved',
     };
 
     AppointmentService.createAppointment(appointmentData)
@@ -123,10 +172,12 @@ const SearchMedicServicesPage: React.FC = () => {
         >
           <option value="">-- All diseases --</option>
           {diseases.map((disease) => (
-            <option key={disease.id} value={disease.id}>
-              {disease.name}
-            </option>
-          ))}
+            // check if disease is in patient diseases
+            patientDiseases.find((pd) => pd.disease_id === disease.id) ? (
+              <option key={disease.id} value={disease.id}>
+                {disease.name}
+              </option>
+            ) : null))}
         </select>
       </div>
 
