@@ -5,7 +5,6 @@ import RegisterPage from './components/RegisterPage';
 import LoginPage from './components/LoginPage';
 import AppointmentListPage from './components/AppointmentListPage'; // Strona do listy wizyt
 import AppointmentDetailPage from './components/AppointmentDetailPage'; // Strona szczegółów wizyty
-import AddAppointmentPage from './components/AddAppointmentPage'; // Strona dodawania wizyty
 import UserDetailPage from './components/UserDetailPage'; // Strona szczegółów użytkownika
 import SearchMedicServicesPage from './components/SearchMedicServicesPage'; // Wyszukiwanie usług
 import AddWorkingHoursPage from './components/AddWorkingHoursPage'; // Dodawanie godzin pracy
@@ -40,11 +39,11 @@ const App: React.FC = () => {
                 </li>
                 {isLoggedIn ? (
                   <>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/appointments">Appointments</Link>
+                    </li>
                     {isPatient ? (
                       <>
-                        <li className="nav-item">
-                          <Link className="nav-link" to="/appointments">Appointments</Link>
-                        </li>
                         <li className="nav-item">
                           <Link className="nav-link" to="/services">Search Services</Link>
                         </li>
@@ -63,7 +62,12 @@ const App: React.FC = () => {
                       <Link className="nav-link" to="/me">Account</Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#" onClick={logout}>Logout</a>
+                      <a className="nav-link" href="#" onClick={() => {
+                          logout();
+                          window.location.href = '/login';
+                        }}>
+                        Logout
+                      </a>
                     </li>
                   </>
                 ) : (
@@ -86,7 +90,6 @@ const App: React.FC = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/appointments" element={<AppointmentListPage />} /> {/* Lista wizyt */}
-        <Route path="/appointments/add" element={<AddAppointmentPage />} /> {/* Dodawanie wizyty */}
         <Route path="/appointments/:id" element={<AppointmentDetailPage />} /> {/* Szczegóły wizyty */}
         <Route path="/me" element={<UserDetailPage />} /> {/* Dane użytkownika */}
         <Route path="/services" element={<SearchMedicServicesPage />} /> {/* Wyszukiwanie usług */}

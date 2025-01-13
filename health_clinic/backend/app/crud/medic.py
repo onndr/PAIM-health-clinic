@@ -137,6 +137,8 @@ def update_appointment(db: Session, appointment_id: int, appointment: Appointmen
     db_appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
     if db_appointment:
         for key, value in appointment.dict().items():
+            if key == 'status':
+                value = str(value.value)
             setattr(db_appointment, key, value)
         db.commit()
         db.refresh(db_appointment)

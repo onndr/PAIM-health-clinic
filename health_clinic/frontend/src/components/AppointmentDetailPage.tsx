@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import AppointmentService, { Appointment } from '../services/AppointmentService';
 import MedicService, { Medic } from '../services/MedicService';
 import DiseaseService, { Disease } from '../services/DiseaseService';
+import { useAuth } from '../context/AuthContext';
 
 const AppointmentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +11,8 @@ const AppointmentDetailPage: React.FC = () => {
   const [medics, setMedics] = useState<Medic[]>([]);
   const [diseases, setDiseases] = useState<Disease[]>([]);
   const navigate = useNavigate();
+
+  const { isPatient } = useAuth();
 
   useEffect(() => {
     if (id) {
@@ -78,7 +81,7 @@ const AppointmentDetailPage: React.FC = () => {
               name="medic_id"
               className="form-select"
               value={appointment.medic_id}
-              onChange={handleChange}
+              disabled={true}
             >
               {medics.map((medic) => (
                 <option key={medic.id} value={medic.id}>
@@ -94,7 +97,7 @@ const AppointmentDetailPage: React.FC = () => {
               name="patient_disease_id"
               className="form-select"
               value={appointment.patient_disease_id}
-              onChange={handleChange}
+              disabled={true}
             >
               {diseases.map((disease) => (
                 <option key={disease.id} value={disease.id}>
@@ -111,7 +114,7 @@ const AppointmentDetailPage: React.FC = () => {
               name="termin"
               className="form-control"
               value={appointment.termin}
-              onChange={handleChange}
+              disabled={true}
             />
           </div>
           <div className="mb-3">
@@ -122,6 +125,7 @@ const AppointmentDetailPage: React.FC = () => {
               className="form-select"
               value={appointment.status}
               onChange={handleChange}
+              disabled={isPatient}
             >
               <option value="Reserved">Reserved</option>
               <option value="Realized">Realized</option>
@@ -139,7 +143,36 @@ const AppointmentDetailPage: React.FC = () => {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setAppointment({ ...appointment!, medic_notes: e.target.value })
               }
+              disabled={isPatient}
                />
+          </div>
+            <div className="mb-3">
+            <label htmlFor="patient_rate" className="form-label">Patient Rate (1-5)</label>
+            <input
+              type="number"
+              id="patient_rate"
+              name="patient_rate"
+              className="form-control"
+              value={appointment?.patient_rate || ''}
+              onChange={handleChange}
+              min="1"
+              max="5"
+              step="1"
+              disabled={!isPatient}
+            />
+            </div>
+          <div className="mb-3">
+            <label htmlFor="patient_feedback" className="form-label">Patient Notes</label>
+            <textarea
+              id="patient_feedback"
+              name="patient_feedback"
+              className="form-control"
+              value={appointment?.patient_feedback || ''}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setAppointment({ ...appointment!, patient_feedback: e.target.value })
+              }
+              disabled={!isPatient}
+            />
           </div>
           <button type="submit" className="btn btn-primary">Update</button>
         </form>

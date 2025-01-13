@@ -4,11 +4,13 @@ import AppointmentService, { Appointment } from '../services/AppointmentService'
 import MedicService, { Medic } from '../services/MedicService';
 import DiseaseService, { Disease } from '../services/DiseaseService';
 import { useAuth } from '../context/AuthContext';
+import PatientDiseaseService from '../services/PatientDiseaseService';
 
 const AppointmentListPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [medics, setMedics] = useState<Medic[]>([]);
   const [diseases, setDiseases] = useState<Disease[]>([]);
+  const [patientDiseases, setPatientDiseases] = useState<any[]>([]);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
@@ -47,6 +49,16 @@ const AppointmentListPage: React.FC = () => {
         console.error('Error fetching diseases:', error);
         alert('Failed to fetch diseases');
       });
+
+    // Pobierz liste chorob pacjenta
+    PatientDiseaseService.getPatientDiseases()
+      .then((response) => {
+        setPatientDiseases(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching patient diseases:', error);
+        alert('Failed to fetch patient diseases');
+      });
   }, [isLoggedIn, navigate]);
 
   const getMedicName = (medicId: number) => {
@@ -59,11 +71,38 @@ const AppointmentListPage: React.FC = () => {
     return disease ? disease.name : 'Unknown Disease';
   };
 
+  // Wyświetl listę wizyt
+  // jesli uzytkownik jest pacjetem, to tylko jego wizyty
+  // jesli uzytkownik jest lekarzem, to wszystkie wizyty danego lekarza
+
+  const { isPatient } = useAuth();
+  const userId = localStorage.getItem('user_id');
+
+  if (!userId) {
+    console.error('No patient ID found.');
+    navigate('/login');
+    return null;
+  }
+
+  if (isPatient){
+    // appoinment zawieta pole patient_disease_id nie patient_id
+    var patiend_diseases = patientDiseases.filter(
+      (patient_disease) => patient_disease.patient_id === parseInt(userId, 10)
+    );
+    var apps = appointments.filter(
+      (appointment) => patiend_diseases.find((disease) => disease.id === appointment.patient_disease_id)
+    );
+  } else {
+    var apps = appointments.filter(
+      (appointment) => appointment.medic_id === parseInt(userId, 10)
+    );
+  }
+
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Your Appointments</h1>
       <ul className="list-group">
-        {appointments.map((appointment) => (
+        {apps.map((appointment) => (
           <li key={appointment.id} className="list-group-item">
             <div className="d-flex justify-content-between align-items-center">
               <div>
@@ -78,6 +117,14 @@ const AppointmentListPage: React.FC = () => {
               <div>
                 <strong>Status:</strong> {appointment.status}
               </div>
+              </div>
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate(`/appointments/${appointment.id}`)}
+                >
+                  View
+                </button>
             </div>
           </li>
         ))}
