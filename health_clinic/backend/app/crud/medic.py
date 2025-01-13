@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.medic import Medic, MedicDiseaseService, MedicTimetable, Appointment
+from app.models.medic import Medic, MedicDiseaseService, MedicTimetable, Appointment, AppointmentStatus
 from app.schemas.medic import MedicCreate, MedicUpdate, MedicDiseaseServiceCreate, MedicDiseaseServiceUpdate, MedicTimetableCreate, MedicTimetableUpdate, AppointmentCreate, AppointmentUpdate
 
 
@@ -22,7 +22,7 @@ def update_medic(db: Session, medic_id: int, medic: MedicUpdate):
     db_medic = db.query(Medic).filter(Medic.id == medic_id).first()
     if db_medic:
         for key, value in medic.dict().items():
-            if key == 'password':
+            if key == 'password' and value:
                 value = Medic.hash_password(value)
             setattr(db_medic, key, value)
         db.commit()
@@ -85,7 +85,7 @@ def get_medic_disease_services(db: Session):
 def create_medic_timetable(db: Session, medic_timetable: MedicTimetableCreate):
     db_medic_timetable = MedicTimetable(
         medic_id=medic_timetable.medic_id,
-        day=medic_timetable.day,
+        day=str(medic_timetable.day.value),
         from_time=medic_timetable.from_time,
         to_time=medic_timetable.to_time
     )
@@ -123,7 +123,7 @@ def create_appointment(db: Session, appointment: AppointmentCreate):
         medic_id=appointment.medic_id,
         patient_disease_id=appointment.patient_disease_id,
         termin=appointment.termin,
-        status=appointment.status,
+        status=AppointmentStatus.Reserved,
         medic_notes=appointment.medic_notes,
         patient_rate=appointment.patient_rate,
         patient_feedback=appointment.patient_feedback
@@ -137,6 +137,8 @@ def update_appointment(db: Session, appointment_id: int, appointment: Appointmen
     db_appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
     if db_appointment:
         for key, value in appointment.dict().items():
+            if key == 'status':
+                value = str(value.value)
             setattr(db_appointment, key, value)
         db.commit()
         db.refresh(db_appointment)

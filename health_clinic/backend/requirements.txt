@@ -8,3 +8,5 @@ pytest
 httpx
 jinja2
 flask
+psycopg2-binary
+flask-cors

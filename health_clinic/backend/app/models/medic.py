@@ -37,10 +37,10 @@ class MedicDiseaseService(Base):
 
 
 class AppointmentStatus(enum.Enum):
-    Reserved = 'RESERVED'
-    Realized = 'REALIZED'
-    Cancelled = 'CANCELLED'
-    Expired = 'EXPIRED'
+    Reserved = 'Reserved'
+    Realized = 'Realized'
+    Cancelled = 'Cancelled'
+    Expired = 'Expired'
 
 class Appointment(Base):
     __tablename__ = 'appointment'
@@ -56,13 +56,13 @@ class Appointment(Base):
 
 
 class Day(enum.Enum):
-    Monday = 'MONDAY'
-    Tuesday = 'TUESDAY'
-    Wednesday = 'WEDNESDAY'
-    Thursday = 'THURSDAY'
-    Friday = 'FRIDAY'
-    Saturday = 'SATURDAY'
-    Sunday = 'SUNDAY'
+    Monday = 'Monday'
+    Tuesday = 'Tuesday'
+    Wednesday = 'Wednesday'
+    Thursday = 'Thursday'
+    Friday = 'Friday'
+    Saturday = 'Saturday'
+    Sunday = 'Sunday'
 
 class MedicTimetable(Base):
     __tablename__ = 'medic_timetable'

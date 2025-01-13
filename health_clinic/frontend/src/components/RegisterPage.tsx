@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
 import { useAuth } from '../context/AuthContext';
 
 const RegisterPage: React.FC = () => {
-  const [userData, setUserData] = useState({
-    username: '',
+  const [userData, setPatientData] = useState({
     password: '',
     password_confirmation: '',
     email: '',
     first_name: '',
     last_name: '',
     phone_number: '',
-    version: 0
+    pesel: '',
+    is_medic: false
   });
   const { register } = useAuth();
 
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setPatientData({ ...userData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,6 +27,12 @@ const RegisterPage: React.FC = () => {
       alert('Password and password confirmation do not match');
       return;
     }
+
+    if (userData.pesel == '') {
+      alert('PESEL is required');
+      return;
+    }
+
     register(userData).then(response => {
       if (response.data.id) {
         alert('User registered successfully');
@@ -43,10 +48,10 @@ const RegisterPage: React.FC = () => {
       <h1 className="text-center">Register</h1>
       <form onSubmit={handleSubmit} className="w-50 mx-auto">
       <div className="form-group mb-3">
-        <input type="text" name="username" className="form-control" placeholder="Username" onChange={handleChange} />
+        <input type="email" name="email" className="form-control" placeholder="Email" onChange={handleChange} />
       </div>
       <div className="form-group mb-3">
-        <input type="email" name="email" className="form-control" placeholder="Email" onChange={handleChange} />
+        <input type="pesel" name="pesel" className="form-control" placeholder="Pesel" onChange={handleChange} />
       </div>
       <div className="form-group mb-3">
         <input type="text" name="first_name" className="form-control" placeholder="First Name" onChange={handleChange} />
@@ -62,6 +67,10 @@ const RegisterPage: React.FC = () => {
       </div>
       <div className="form-group mb-3">
         <input type="password" name="password_confirmation" className="form-control" placeholder="Confirm Password" onChange={handleChange} />
+      </div>
+      <div className="form-group mb-3 d-flex align-items-center">
+        <label className="form-check-label me-2" htmlFor="is_medic">Register as Medic</label>
+        <input type="checkbox" name="is_medic" className="form-check-input" onChange={handleChange} />
       </div>
       <button type="submit" className="btn btn-primary w-100">Register</button>
       </form>

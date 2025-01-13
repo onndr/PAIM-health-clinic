@@ -46,10 +46,10 @@ class MedicDiseaseService(MedicDiseaseServiceBase):
 
 # AppointmentStatus enum
 class AppointmentStatus(enum.Enum):
-    Reserved = 'RESERVED'
-    Realized = 'REALIZED'
-    Cancelled = 'CANCELLED'
-    Expired = 'EXPIRED'
+    Reserved = 'Reserved'
+    Realized = 'Realized'
+    Cancelled = 'Cancelled'
+    Expired = 'Expired'
 
 # Appointment schemas
 class AppointmentBase(BaseModel):
@@ -76,13 +76,13 @@ class Appointment(AppointmentBase):
 
 # Day enum
 class Day(enum.Enum):
-    Monday = 'MONDAY'
-    Tuesday = 'TUESDAY'
-    Wednesday = 'WEDNESDAY'
-    Thursday = 'THURSDAY'
-    Friday = 'FRIDAY'
-    Saturday = 'SATURDAY'
-    Sunday = 'SUNDAY'
+    Monday = 'Monday'
+    Tuesday = 'Tuesday'
+    Wednesday = 'Wednesday'
+    Thursday = 'Thursday'
+    Friday = 'Friday'
+    Saturday = 'Saturday'
+    Sunday = 'Sunday'
 
 # MedicTimetable schemas
 class MedicTimetableBase(BaseModel):

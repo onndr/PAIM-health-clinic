@@ -10,8 +10,6 @@ date: 04.01.2024
 
 ```shell
 docker compose up -d
-cd ../frontend ; yarn build &
-cd backend ; uvicorn app.main:app
 ```
 
 ### Project decisions

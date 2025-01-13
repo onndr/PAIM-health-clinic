@@ -15,8 +15,7 @@ def map_db_patient_to_response_patient(db_patient: models.patient.Patient) -> sc
         email=db_patient.email,
         first_name=db_patient.first_name,
         last_name=db_patient.last_name,
-        phone_number=db_patient.phone_number,
-        version=db_patient.version
+        phone_number=db_patient.phone_number
     )
 
 @patient_bp.route("/api/patients", methods=["POST"])
@@ -52,8 +51,8 @@ def delete_patient(patient_id):
     db_patient = crud.get_patient(db=db, patient_id=patient_id)
     if db_patient is None:
         abort(404, "Patient not found")
-    db_patient = crud.delete_patient(db=db, patient_id=patient_id)
-    return jsonify(map_db_patient_to_response_patient(db_patient).dict())
+    status = crud.delete_patient(db=db, patient_id=patient_id)
+    return jsonify(status)
 
 @patient_bp.route("/api/patients", methods=["GET"])
 def read_patients():

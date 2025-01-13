@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.models.medic import Appointment
 from app.models.patient import Patient, Disease, PatientDisease
 from app.schemas.patient import PatientCreate, PatientUpdate, DiseaseCreate, DiseaseUpdate, PatientDiseaseCreate, PatientDiseaseUpdate
 
@@ -23,7 +24,7 @@ def update_patient(db: Session, patient_id: int, patient: PatientUpdate):
     db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if db_patient:
         for key, value in patient.dict().items():
-            if key == 'password':
+            if key == 'password' and value:
                 value = Patient.hash_password(value)
             setattr(db_patient, key, value)
         db.commit()
@@ -33,9 +34,18 @@ def update_patient(db: Session, patient_id: int, patient: PatientUpdate):
 def delete_patient(db: Session, patient_id: int):
     db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if db_patient:
+        patient_diseases = db.query(PatientDisease).filter(PatientDisease.patient_id == patient_id).all()
+        for patient_disease in patient_diseases:
+            appointments = db.query(Appointment).filter(Appointment.patient_disease_id == patient_disease.id).all()
+            for appointment in appointments:
+                db.delete(appointment)
+                db.commit()
+            db.delete(patient_disease)
+            db.commit()
+
         db.delete(db_patient)
         db.commit()
-    return db_patient
+    return True
 
 def get_patient(db: Session, patient_id: int):
     return db.query(Patient).filter(Patient.id == patient_id).first()

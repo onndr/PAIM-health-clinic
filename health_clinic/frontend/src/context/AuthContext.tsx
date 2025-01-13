@@ -3,8 +3,8 @@ import AuthService from '../services/AuthService';
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  isLibrarian: boolean;
-  login: (username: string, password: string ) => Promise<any>;
+  isPatient: boolean;
+  login: (email: string, password: string ) => Promise<any>;
   logout: () => void;
   register: (userData: any) => Promise<any>;
 }
@@ -13,15 +13,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(AuthService.isLoggedIn());
-  const [isLibrarian, setIsLibrarian] = useState(AuthService.isLibrarian());
+  const [isPatient, setIsPatient] = useState(AuthService.isPatient());
 
-  const login = async (username: string, password: string ) => {
-    const response = await AuthService.login({"username": username, "password": password});
+  const login = async (email: string, password: string ) => {
+    const response = await AuthService.login({"email": email, "password": password});
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('is_librarian', response.data.is_librarian);
+      localStorage.setItem('is_patient', response.data.is_patient);
       setIsLoggedIn(true);
-      setIsLibrarian(response.data.is_librarian);
+      setIsPatient(response.data.is_patient);
     }
     return response;
   };
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     AuthService.logout();
     setIsLoggedIn(false);
-    setIsLibrarian(false);
+    setIsPatient(false);
   };
 
   const register = async (userData: any) => {
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLibrarian, login, logout, register }}>
+    <AuthContext.Provider value={{ isLoggedIn, isPatient, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
