@@ -103,7 +103,7 @@ def register_medic():
         return abort(400, str(e))
     return map_db_medic_to_response_medic(created_user).dict()
 
-@auth_bp.route("/api/users/login", methods=["POST"])
+@auth_bp.route("/api/users/login/", methods=["POST"])
 def login():
     data = request.get_json()
     db = next(get_db())

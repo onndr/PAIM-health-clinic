@@ -9,7 +9,7 @@ import app.routers as routers
 from app.database import engine, Base, SessionLocal
 
 
-app = Flask(__name__, static_folder='../../frontend/build')
+app = Flask(__name__)
 
 # Enable CORS
 CORS(app)
@@ -38,7 +38,7 @@ def init_db():
         patients = [
             models.Patient(
                 pesel="12345678901",
-                email="patient1@example.com",
+                email="john.doe@gmail.com",
                 first_name="John",
                 last_name="Doe",
                 phone_number="123456789",
@@ -46,7 +46,7 @@ def init_db():
             ),
             models.Patient(
                 pesel="23456789012",
-                email="patient2@example.com",
+                email="jane.smith@gmail.com",
                 first_name="Jane",
                 last_name="Smith",
                 phone_number="987654321",
@@ -61,7 +61,7 @@ def init_db():
         medics = [
             models.Medic(
                 pesel="34567890123",
-                email="medic1@example.com",
+                email="alice.brown@gmail.com",
                 first_name="Alice",
                 last_name="Brown",
                 phone_number="123123123",
@@ -69,7 +69,7 @@ def init_db():
             ),
             models.Medic(
                 pesel="45678901234",
-                email="medic2@example.com",
+                email="bob.johnson@gmail.com",
                 first_name="Bob",
                 last_name="Johnson",
                 phone_number="321321321",
@@ -84,7 +84,9 @@ def init_db():
         diseases = [
             models.Disease(name="Flu"),
             models.Disease(name="Cold"),
-            models.Disease(name="COVID-19")
+            models.Disease(name="COVID-19"),
+            models.Disease(name="Scoliosis"),
+            models.Disease(name="Diabetes")
         ]
         for disease in diseases:
             db.add(disease)
@@ -102,7 +104,10 @@ def init_db():
         # Add initial medic disease services
         medic_disease_services = [
             models.MedicDiseaseService(medic_id=1, disease_id=1, service="Consultation"),
-            models.MedicDiseaseService(medic_id=2, disease_id=2, service="Treatment")
+            models.MedicDiseaseService(medic_id=2, disease_id=2, service="Treatment"),
+            models.MedicDiseaseService(medic_id=1, disease_id=3, service="Consultation"),
+            models.MedicDiseaseService(medic_id=2, disease_id=4, service="Treatment"),
+            models.MedicDiseaseService(medic_id=1, disease_id=5, service="Consultation")
         ]
         for medic_disease_service in medic_disease_services:
             db.add(medic_disease_service)

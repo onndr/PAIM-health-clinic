@@ -14,15 +14,15 @@ const register = (userData: any) => {
 };
 
 const register_patient = (userData: any) => {
-  return axios.post(`${PATIENTS_API_URL}/register`, userData);
+  return axios.post(`${PATIENTS_API_URL}/register/`, userData);
 };
 
 const register_medic = (userData: any) => {
-  return axios.post(`${MEDICS_API_URL}/register`, userData);
+  return axios.post(`${MEDICS_API_URL}/register/`, userData);
 };
 
 const login = (credentials: any) => {
-  return axios.post(`${USERS_API_URL}/login`, credentials);
+  return axios.post(`${USERS_API_URL}/login/`, credentials);
 };
 
 const logout = () => {

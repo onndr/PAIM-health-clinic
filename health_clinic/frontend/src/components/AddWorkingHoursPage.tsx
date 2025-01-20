@@ -72,6 +72,7 @@ const AddWorkingHoursPage: React.FC = () => {
           <h3>Your Working Hours</h3>
           <ul className="list-group">
             {workingHours.map((work, index) => (
+              work.medic_id === Number(user_id) &&
               <li key={index} className="list-group-item">
                 {work.day.split(".")[1]}: {work.from_time} - {work.to_time}
               </li>

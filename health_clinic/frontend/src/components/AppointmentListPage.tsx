@@ -128,6 +128,11 @@ const AppointmentListPage: React.FC = () => {
             </div>
           </li>
         ))}
+        {apps.length === 0 && (
+          <li className="list-group-item">
+            <div className="text-center">No appointments found.</div>
+            </li>
+        )}
       </ul>
     </div>
   );
